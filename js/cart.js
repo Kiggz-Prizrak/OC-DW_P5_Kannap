@@ -103,7 +103,9 @@ for(let i = 0; i < cart.length; i++) {
         }) 
       //////////////////////////////////////////////
 
-      // additionner chaque article sur le total 
+     total = cart.reduce(x => value.price)
+
+     console.log(total)
 
       ///////////////////////////////////////////
       
@@ -112,6 +114,17 @@ for(let i = 0; i < cart.length; i++) {
       console.log(err)
     })
 }
+
+///////////////////////////////////////////////
+
+///récupération des id du panier
+
+let productId = cart.map(x => x.ProductId)
+console.log(productId)
+
+
+////////////////////////////////////////////////////
+
 
 function getInputError(message, errorMessage){
   document
@@ -211,19 +224,23 @@ submit.addEventListener("click", function(e) {
     let customerEmail = email.value
     
     //création de l'objet body contetnant les data du form et les éléments du panier
+    
+    
     const order = {
       contact : {
-        customerFirstName,
-        customerLastName,
-        customerAddress,
-        customerCity,
-        customerEmail,
+        "firstName" : customerFirstName,
+        "lastName" : customerLastName,
+        "address" : customerAddress,
+        "city" : customerCity,
+        "email" : customerEmail,
       },
-      product : cart
+      // "products" est une clé obligatoire non précisée sur la documentation 
+      "products" : productId
     }
+    console.log(`création de la commande ${order}`)
     console.log(order)
-    //envoies de l'objet vers le serveur 
-    
+   
+    //envoies de l'objet vers le serveur  
     //////////////////////////////////////////
     fetch("http://localhost:3000/api/products/order", {
 	    method: "POST",
@@ -233,13 +250,29 @@ submit.addEventListener("click", function(e) {
       },  
       body: JSON.stringify(order)
     })
+      //récupération de la réponse
       .then(function(res) {
         if (res.ok) {
           return res.json();
         }
-      }) 
-///////////////////////////////////////////////////////////
+      })
+      //récupération de la valeur et envoi vers le localstorage
+      .then(value => {
+        localStorage.removeItem('cart')
+        orderResponse = JSON.stringify(value.orderId)
+        localStorage.setItem("orderNumber", orderResponse);
+        submit.location.href="http://localhost:5500/html/confirmation.html"
+        e.stopPropagation()
+      })
+      .catch(function(err) {
+        console.log(err)
+      })
   }
 })
+
+
+
+
+
 
 // créer un numéro de ticket via "Math.random"
