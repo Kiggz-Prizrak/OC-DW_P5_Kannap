@@ -214,7 +214,7 @@ cityInput.addEventListener("change", function(e){
 //==== EMAIL
 let emailInput = document.getElementById("email")
 emailInput.addEventListener("change", function(e){
-  if(/[^\d]+/.test(e.target.value)) {
+  if(/^\S.*@\S+$/.test(e.target.value)) {
     emailInputValidator = true
     let email = e.target.value
     console.log(email)
