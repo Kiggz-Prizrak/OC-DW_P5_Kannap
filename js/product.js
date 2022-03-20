@@ -67,12 +67,12 @@ fetch(`http://localhost:3000/api/products/${articleId}`)
         for(let i = 0; i < cart.length; i++) {
             let cartContent = cart[i]
            
-            if(cartContent.color === cartProduct.color) {
+            if(cartContent.color === cartProduct.color && cartProduct.ProductId === cartContent.ProductId) {
                 console.table(cart)
                 let previousQuantity = Number(cartContent.numberProduct)
                 let newQuantity = Number(quantity.value)
                 cartProduct.numberProduct = newQuantity + previousQuantity
-                let suppr = cart.splice(1, i)   //(cartContent)
+                cart.splice(i, 1)   //(cartContent)
                 console.table(cart)
             }
         }

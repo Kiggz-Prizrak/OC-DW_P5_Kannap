@@ -1,3 +1,18 @@
+function createElement(tag, parent, attributes, innerText) {
+  const element = document.createElement(tag)
+  parent.appendChild(element)
+  
+  if (attributes) {
+    attributes.forEach((attribute) => {
+      element.setAttribute(attribute.name, attribute.value)
+    })
+  }
+  if (innerText) {
+    element.innerText = innerText;
+  }
+  return element;
+} 
+
 function getKanaps() {
   fetch("http://localhost:3000/api/products")
   .then(function(res) {
@@ -11,30 +26,33 @@ function getKanaps() {
       let article = kanaps[i]
       console.log(article)
       
-      let addA = document.createElement('a')
-      
       let box = document.getElementById("items")
-      addA.href = `./product.html?id=${article._id}`
-      box.appendChild(addA)
-      
-      
-      let addArticle = document.createElement('article')
-      addA.appendChild(addArticle)
 
-      let addImg = document.createElement('img')
-      addImg.alt = article.altTxt
-      addImg.src = article.imageUrl
-      addArticle.appendChild(addImg)
-
-      let addTitle = document.createElement('h3')
-      addTitle.class = "productName"
-      addTitle.innerText = article.name
-      addArticle.appendChild(addTitle)
+      let addA = createElement("a", box, [{
+        name : "href",
+        value: `./product.html?id=${article._id}`
+      }])
       
-      let addDescription = document.createElement('p')
-      addDescription.innerText = article.description
-      addDescription.class = "ProductDescription"
-      addArticle.appendChild(addDescription)
+      let addArticle = createElement("article", addA)
+
+      let addImg = createElement('img', addArticle, [{
+        name : "alt",
+        value : article.altTxt,
+      },
+      {
+        name : "src",
+        value : article.imageUrl,
+      }])
+
+      let addTitle = createElement('h3', addArticle, [{
+        name : "class",
+        value : "ProductName",
+      }], article.name)
+      
+      let addDescription = createElement('p', addArticle, [{
+        name : "class",
+        value : "ProductName",
+      }], article.description)
     }
   })
   .catch(function(err) {
